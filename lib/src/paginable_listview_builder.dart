@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
   final Widget Function(Exception exception, void Function() tryAgain)
-      errorIndicatorWidget;
+  errorIndicatorWidget;
   final Widget Function() progressIndicatorWidget;
   final Widget Function(BuildContext context, int index) itemBuilder;
   final Future<void> Function() loadMore;
@@ -27,28 +27,28 @@ class PaginableListViewBuilder extends StatefulWidget {
   final Clip clipBehavior;
   const PaginableListViewBuilder(
       {Key? key,
-      this.scrollDirection = Axis.vertical,
-      this.reverse = false,
-      this.primary,
-      this.physics,
-      this.shrinkWrap = false,
-      this.padding,
-      this.itemExtent,
-      required this.loadMore,
-      required this.errorIndicatorWidget,
-      required this.progressIndicatorWidget,
-      required this.itemBuilder,
-      required this.itemCount,
-      this.controller,
-      this.addAutomaticKeepAlives = true,
-      this.addRepaintBoundaries = true,
-      this.addSemanticIndexes = true,
-      this.cacheExtent,
-      this.semanticChildCount,
-      this.dragStartBehavior = DragStartBehavior.start,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-      this.restorationId,
-      this.clipBehavior = Clip.hardEdge})
+        this.scrollDirection = Axis.vertical,
+        this.reverse = false,
+        this.primary,
+        this.physics,
+        this.shrinkWrap = false,
+        this.padding,
+        this.itemExtent,
+        required this.loadMore,
+        required this.errorIndicatorWidget,
+        required this.progressIndicatorWidget,
+        required this.itemBuilder,
+        required this.itemCount,
+        this.controller,
+        this.addAutomaticKeepAlives = true,
+        this.addRepaintBoundaries = true,
+        this.addSemanticIndexes = true,
+        this.cacheExtent,
+        this.semanticChildCount,
+        this.dragStartBehavior = DragStartBehavior.start,
+        this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+        this.restorationId,
+        this.clipBehavior = Clip.hardEdge})
       : super(key: key);
 
   @override
@@ -57,9 +57,14 @@ class PaginableListViewBuilder extends StatefulWidget {
 }
 
 class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
-  bool isAlmostAtTheEndOfTheScroll(ScrollNotification scrollNotification) =>
-      scrollNotification.metrics.pixels >=
-      scrollNotification.metrics.maxScrollExtent * 0.8;
+  bool isAlmostAtTheEndOfTheScroll(
+      ScrollUpdateNotification scrollUpdateNotification) =>
+      scrollUpdateNotification.metrics.pixels >=
+          scrollUpdateNotification.metrics.maxScrollExtent * 0.8;
+
+  bool isScrollingDownwards(
+      ScrollUpdateNotification scrollUpdateNotification) =>
+      scrollUpdateNotification.scrollDelta! > 0.0;
 
   Future<void> performPagination() async {
     valueNotifier.value = CustomWidgetEnum.ProgressIndicator;
@@ -68,7 +73,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
       await widget.loadMore();
       isLoadMoreBeingCalled = false;
       valueNotifier.value = CustomWidgetEnum.EmptyContainer;
-    } on Exception catch (exception) {  
+    } on Exception catch (exception) {
       this.exception = exception;
       valueNotifier.value = CustomWidgetEnum.ErrorWidget;
     }
@@ -77,7 +82,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   void tryAgain() => performPagination();
 
   ValueNotifier<CustomWidgetEnum> valueNotifier =
-      ValueNotifier(CustomWidgetEnum.ProgressIndicator);
+  ValueNotifier(CustomWidgetEnum.ProgressIndicator);
 
   late Exception exception;
 
@@ -85,9 +90,11 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollNotification) {
-          if (isAlmostAtTheEndOfTheScroll(scrollNotification)) {
+    return NotificationListener<ScrollUpdateNotification>(
+        onNotification: (ScrollUpdateNotification scrollUpdateNotification) {
+          if (isAlmostAtTheEndOfTheScroll(scrollUpdateNotification) &&
+              isScrollingDownwards(scrollUpdateNotification)) {
+            print("I am being called");
             if (!isLoadMoreBeingCalled) {
               performPagination();
             }
