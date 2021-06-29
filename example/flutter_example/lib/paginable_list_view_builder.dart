@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
-  final Widget Function(String errorLog, void Function() tryAgain)
+  final Widget Function(Exception exception, void Function() tryAgain)
       errorIndicatorWidget;
   final Widget Function() progressIndicatorWidget;
   final Widget Function(BuildContext context, int index) itemBuilder;
@@ -61,16 +61,17 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
       scrollNotification.metrics.pixels >=
       scrollNotification.metrics.maxScrollExtent * 0.8;
 
-  void performPagination() {
+  Future<void> performPagination() async {
     valueNotifier.value = CustomWidgetEnum.ProgressIndicator;
     isLoadMoreBeingCalled = true;
-    widget.loadMore().then((value) {
+    try {
+      await widget.loadMore();
       isLoadMoreBeingCalled = false;
       valueNotifier.value = CustomWidgetEnum.EmptyContainer;
-    }).catchError((e) {
-      this.errorLog = e.toString();
+    } on Exception catch (exception) {  
+      this.exception = exception;
       valueNotifier.value = CustomWidgetEnum.ErrorWidget;
-    });
+    }
   }
 
   void tryAgain() => performPagination();
@@ -78,7 +79,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   ValueNotifier<CustomWidgetEnum> valueNotifier =
       ValueNotifier(CustomWidgetEnum.ProgressIndicator);
 
-  late String errorLog;
+  late Exception exception;
 
   bool isLoadMoreBeingCalled = false;
 
@@ -113,7 +114,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
                         return Container();
                       } else if (value == CustomWidgetEnum.ErrorWidget) {
                         return widget.errorIndicatorWidget(
-                            this.errorLog, this.tryAgain);
+                            this.exception, this.tryAgain);
                       }
                       return widget.progressIndicatorWidget();
                     });

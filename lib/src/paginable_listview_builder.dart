@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
-  final Widget Function(String errorLog, void Function() tryAgain)
-  errorIndicatorWidget;
+  final Widget Function(Exception exception, void Function() tryAgain)
+      errorIndicatorWidget;
   final Widget Function() progressIndicatorWidget;
   final Widget Function(BuildContext context, int index) itemBuilder;
   final Future<void> Function() loadMore;
@@ -27,28 +27,28 @@ class PaginableListViewBuilder extends StatefulWidget {
   final Clip clipBehavior;
   const PaginableListViewBuilder(
       {Key? key,
-        this.scrollDirection = Axis.vertical,
-        this.reverse = false,
-        this.primary,
-        this.physics,
-        this.shrinkWrap = false,
-        this.padding,
-        this.itemExtent,
-        required this.loadMore,
-        required this.errorIndicatorWidget,
-        required this.progressIndicatorWidget,
-        required this.itemBuilder,
-        required this.itemCount,
-        this.controller,
-        this.addAutomaticKeepAlives = true,
-        this.addRepaintBoundaries = true,
-        this.addSemanticIndexes = true,
-        this.cacheExtent,
-        this.semanticChildCount,
-        this.dragStartBehavior = DragStartBehavior.start,
-        this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-        this.restorationId,
-        this.clipBehavior = Clip.hardEdge})
+      this.scrollDirection = Axis.vertical,
+      this.reverse = false,
+      this.primary,
+      this.physics,
+      this.shrinkWrap = false,
+      this.padding,
+      this.itemExtent,
+      required this.loadMore,
+      required this.errorIndicatorWidget,
+      required this.progressIndicatorWidget,
+      required this.itemBuilder,
+      required this.itemCount,
+      this.controller,
+      this.addAutomaticKeepAlives = true,
+      this.addRepaintBoundaries = true,
+      this.addSemanticIndexes = true,
+      this.cacheExtent,
+      this.semanticChildCount,
+      this.dragStartBehavior = DragStartBehavior.start,
+      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+      this.restorationId,
+      this.clipBehavior = Clip.hardEdge})
       : super(key: key);
 
   @override
@@ -59,26 +59,27 @@ class PaginableListViewBuilder extends StatefulWidget {
 class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   bool isAlmostAtTheEndOfTheScroll(ScrollNotification scrollNotification) =>
       scrollNotification.metrics.pixels >=
-          scrollNotification.metrics.maxScrollExtent * 0.8;
+      scrollNotification.metrics.maxScrollExtent * 0.8;
 
-  void performPagination() {
+  Future<void> performPagination() async {
     valueNotifier.value = CustomWidgetEnum.ProgressIndicator;
     isLoadMoreBeingCalled = true;
-    widget.loadMore().then((value) {
+    try {
+      await widget.loadMore();
       isLoadMoreBeingCalled = false;
       valueNotifier.value = CustomWidgetEnum.EmptyContainer;
-    }).catchError((e) {
-      this.errorLog = e.toString();
+    } on Exception catch (exception) {  
+      this.exception = exception;
       valueNotifier.value = CustomWidgetEnum.ErrorWidget;
-    });
+    }
   }
 
   void tryAgain() => performPagination();
 
   ValueNotifier<CustomWidgetEnum> valueNotifier =
-  ValueNotifier(CustomWidgetEnum.ProgressIndicator);
+      ValueNotifier(CustomWidgetEnum.ProgressIndicator);
 
-  late String errorLog;
+  late Exception exception;
 
   bool isLoadMoreBeingCalled = false;
 
@@ -113,7 +114,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
                         return Container();
                       } else if (value == CustomWidgetEnum.ErrorWidget) {
                         return widget.errorIndicatorWidget(
-                            this.errorLog, this.tryAgain);
+                            this.exception, this.tryAgain);
                       }
                       return widget.progressIndicatorWidget();
                     });

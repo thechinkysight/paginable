@@ -22,9 +22,9 @@ class _HomeState extends State<Home> {
   Future<int> getFutureInteger() async {
     // Uncomment the throw statement to see how I handled the exception
     await Future.delayed(Duration(seconds: 5));
-   // throw Exception("This is test Exception");
-    int lastNumber = numbers.last;
-    return lastNumber + 1;
+    throw Exception("This is test Exception");
+    // int lastNumber = numbers.last;
+    // return lastNumber + 1;
   }
 
   @override
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
                 progressIndicatorWidget: getProgressIndicator)));
   }
 
-  Widget getErrorIndicator(String errorLog, void Function() tryAgain) {
+  Widget getErrorIndicator(Exception exception, void Function() tryAgain) {
     return Container(
         height: 50,
         color: Colors.red,
@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(errorLog),
+              Text(exception.toString()),
               ElevatedButton(onPressed: tryAgain, child: Text("Try Again"))
             ],
           ),
