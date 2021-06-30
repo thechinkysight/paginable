@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'enums/widget_indicator.dart';
+import 'last_item.dart';
 
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
@@ -58,8 +58,8 @@ class PaginableListViewBuilder extends StatefulWidget {
 }
 
 class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
-  ValueNotifier<WidgetIndicator> valueNotifier =
-      ValueNotifier(WidgetIndicator.ProgressIndicatorWidget);
+  ValueNotifier<LastItem> valueNotifier =
+      ValueNotifier(LastItem.ProgressIndicator);
 
   late Exception exception;
 
@@ -77,15 +77,15 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
       scrollUpdateNotification.scrollDelta! > 0.0;
 
   Future<void> performPagination() async {
-    valueNotifier.value = WidgetIndicator.ProgressIndicatorWidget;
+    valueNotifier.value = LastItem.ProgressIndicator;
     isLoadMoreBeingCalled = true;
     try {
       await widget.loadMore();
       isLoadMoreBeingCalled = false;
-      valueNotifier.value = WidgetIndicator.EmptyContainerWidget;
+      valueNotifier.value = LastItem.EmptyContainer;
     } on Exception catch (exception) {
       this.exception = exception;
-      valueNotifier.value = WidgetIndicator.ErrorIndicatorWidget;
+      valueNotifier.value = LastItem.ErrorIndicator;
     }
   }
 
@@ -114,12 +114,12 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
             itemCount: widget.itemCount + 1,
             itemBuilder: (context, index) {
               if (index == widget.itemCount) {
-                return ValueListenableBuilder<WidgetIndicator>(
+                return ValueListenableBuilder<LastItem>(
                     valueListenable: valueNotifier,
                     builder: (context, value, child) {
-                      if (value == WidgetIndicator.EmptyContainerWidget) {
+                      if (value == LastItem.EmptyContainer) {
                         return Container();
-                      } else if (value == WidgetIndicator.ErrorIndicatorWidget) {
+                      } else if (value == LastItem.ErrorIndicator) {
                         return widget.errorIndicatorWidget(
                             this.exception, this.tryAgain);
                       }
