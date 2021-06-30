@@ -1,11 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'enums/widget_indicator.dart';
 
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
   final Widget Function(Exception exception, void Function() tryAgain)
-  errorIndicatorWidget;
-  final Widget Function() progressIndicatorWidget;
+      errorIndicatorWidget;
+  final Widget progressIndicatorWidget;
   final Widget Function(BuildContext context, int index) itemBuilder;
   final Future<void> Function() loadMore;
   final ScrollController? controller;
@@ -27,28 +28,28 @@ class PaginableListViewBuilder extends StatefulWidget {
   final Clip clipBehavior;
   const PaginableListViewBuilder(
       {Key? key,
-        this.scrollDirection = Axis.vertical,
-        this.reverse = false,
-        this.primary,
-        this.physics,
-        this.shrinkWrap = false,
-        this.padding,
-        this.itemExtent,
-        required this.loadMore,
-        required this.errorIndicatorWidget,
-        required this.progressIndicatorWidget,
-        required this.itemBuilder,
-        required this.itemCount,
-        this.controller,
-        this.addAutomaticKeepAlives = true,
-        this.addRepaintBoundaries = true,
-        this.addSemanticIndexes = true,
-        this.cacheExtent,
-        this.semanticChildCount,
-        this.dragStartBehavior = DragStartBehavior.start,
-        this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-        this.restorationId,
-        this.clipBehavior = Clip.hardEdge})
+      this.scrollDirection = Axis.vertical,
+      this.reverse = false,
+      this.primary,
+      this.physics,
+      this.shrinkWrap = false,
+      this.padding,
+      this.itemExtent,
+      required this.loadMore,
+      required this.errorIndicatorWidget,
+      required this.progressIndicatorWidget,
+      required this.itemBuilder,
+      required this.itemCount,
+      this.controller,
+      this.addAutomaticKeepAlives = true,
+      this.addRepaintBoundaries = true,
+      this.addSemanticIndexes = true,
+      this.cacheExtent,
+      this.semanticChildCount,
+      this.dragStartBehavior = DragStartBehavior.start,
+      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+      this.restorationId,
+      this.clipBehavior = Clip.hardEdge})
       : super(key: key);
 
   @override
@@ -57,36 +58,36 @@ class PaginableListViewBuilder extends StatefulWidget {
 }
 
 class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
-  bool isAlmostAtTheEndOfTheScroll(
-      ScrollUpdateNotification scrollUpdateNotification) =>
-      scrollUpdateNotification.metrics.pixels >=
-          scrollUpdateNotification.metrics.maxScrollExtent * 0.8;
-
-  bool isScrollingDownwards(
-      ScrollUpdateNotification scrollUpdateNotification) =>
-      scrollUpdateNotification.scrollDelta! > 0.0;
-
-  Future<void> performPagination() async {
-    valueNotifier.value = CustomWidgetEnum.ProgressIndicator;
-    isLoadMoreBeingCalled = true;
-    try {
-      await widget.loadMore();
-      isLoadMoreBeingCalled = false;
-      valueNotifier.value = CustomWidgetEnum.EmptyContainer;
-    } on Exception catch (exception) {
-      this.exception = exception;
-      valueNotifier.value = CustomWidgetEnum.ErrorWidget;
-    }
-  }
-
-  void tryAgain() => performPagination();
-
-  ValueNotifier<CustomWidgetEnum> valueNotifier =
-  ValueNotifier(CustomWidgetEnum.ProgressIndicator);
+  ValueNotifier<WidgetIndicator> valueNotifier =
+      ValueNotifier(WidgetIndicator.ProgressIndicatorWidget);
 
   late Exception exception;
 
   bool isLoadMoreBeingCalled = false;
+
+  void tryAgain() => performPagination();
+
+  bool isAlmostAtTheEndOfTheScroll(
+          ScrollUpdateNotification scrollUpdateNotification) =>
+      scrollUpdateNotification.metrics.pixels >=
+      scrollUpdateNotification.metrics.maxScrollExtent * 0.8;
+
+  bool isScrollingDownwards(
+          ScrollUpdateNotification scrollUpdateNotification) =>
+      scrollUpdateNotification.scrollDelta! > 0.0;
+
+  Future<void> performPagination() async {
+    valueNotifier.value = WidgetIndicator.ProgressIndicatorWidget;
+    isLoadMoreBeingCalled = true;
+    try {
+      await widget.loadMore();
+      isLoadMoreBeingCalled = false;
+      valueNotifier.value = WidgetIndicator.EmptyContainerWidget;
+    } on Exception catch (exception) {
+      this.exception = exception;
+      valueNotifier.value = WidgetIndicator.ErrorIndicatorWidget;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,6 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
         onNotification: (ScrollUpdateNotification scrollUpdateNotification) {
           if (isAlmostAtTheEndOfTheScroll(scrollUpdateNotification) &&
               isScrollingDownwards(scrollUpdateNotification)) {
-            print("I am being called");
             if (!isLoadMoreBeingCalled) {
               performPagination();
             }
@@ -114,16 +114,16 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
             itemCount: widget.itemCount + 1,
             itemBuilder: (context, index) {
               if (index == widget.itemCount) {
-                return ValueListenableBuilder<CustomWidgetEnum>(
+                return ValueListenableBuilder<WidgetIndicator>(
                     valueListenable: valueNotifier,
                     builder: (context, value, child) {
-                      if (value == CustomWidgetEnum.EmptyContainer) {
+                      if (value == WidgetIndicator.EmptyContainerWidget) {
                         return Container();
-                      } else if (value == CustomWidgetEnum.ErrorWidget) {
+                      } else if (value == WidgetIndicator.ErrorIndicatorWidget) {
                         return widget.errorIndicatorWidget(
                             this.exception, this.tryAgain);
                       }
-                      return widget.progressIndicatorWidget();
+                      return widget.progressIndicatorWidget;
                     });
               }
               return widget.itemBuilder(context, index);
@@ -139,5 +139,3 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
             clipBehavior: widget.clipBehavior));
   }
 }
-
-enum CustomWidgetEnum { ProgressIndicator, ErrorWidget, EmptyContainer }
