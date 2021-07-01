@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:paginable/paginable.dart';
 
-import 'api.dart';
 import 'model/post.dart';
 import 'post_cubit.dart';
 
@@ -25,20 +24,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late Api api;
-
-  @override
-  void initState() {
-    super.initState();
-    api = Api();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
             body: FutureBuilder<List<Post>>(
-                future: api.getPosts(),
+                future: context.read<PostCubit>().fetchPostsInChunks(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Container(
@@ -86,7 +77,9 @@ class _HomeState extends State<Home> {
                         },
                         itemCount: state.length,
                         loadMore: () async {
-                          List<Post> posts = await api.getPosts();
+                          List<Post> posts = await context
+                              .read<PostCubit>()
+                              .fetchPostsInChunks();
 
                           context.read<PostCubit>().add(posts);
                         },
