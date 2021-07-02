@@ -327,7 +327,7 @@ packages:
     source: hosted
     version: "2.0.0"
   paginable:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "."
       ref: main
