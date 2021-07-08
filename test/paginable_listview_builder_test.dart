@@ -26,6 +26,10 @@ void main() {
         ],
       ));
 
+  void scrollToTheEndOfScrollView(ScrollController scrollController) {
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  }
+
   setUp(() async {
     scrollController = ScrollController();
   });
@@ -35,7 +39,7 @@ void main() {
   });
 
   testWidgets(
-      "Must return ErrorIndicatorWidget as last item when an exception occurs in loadMore function",
+      "Must return the errorIndicatorWidget as last item when an exception occurs in the loadMore function",
       (WidgetTester tester) async {
     Exception exception = Exception('This is a test exception');
 
@@ -47,12 +51,15 @@ void main() {
         progressIndicatorWidget: progressIndicatorWidget,
         errorIndicatorWidget: errorIndicatorWidget));
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    scrollToTheEndOfScrollView(scrollController);
+
     await tester.pump();
 
     final exceptionFinder = find.text(exception.toString());
 
     expect(exceptionFinder, findsOneWidget);
+
+    //TODO: Check whether we can find a Container widget with color property set to Colors.redAccent or not.
   });
 
   testWidgets(
@@ -64,12 +71,33 @@ void main() {
         progressIndicatorWidget: progressIndicatorWidget,
         errorIndicatorWidget: errorIndicatorWidget));
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    scrollToTheEndOfScrollView(scrollController);
     await tester.pump();
 
     WidgetPredicate isAnEmptyContainer =
         (Widget widget) => widget is Container && widget.child == null;
 
     expect(find.byWidgetPredicate(isAnEmptyContainer), findsOneWidget);
+  });
+
+  testWidgets(
+      "Must return the progressIndicatorWidget as last item when the loadMore function is being executed",
+      (WidgetTester tester) async {
+    await tester.pumpWidget(TestPaginableListViewBuilder(
+        loadMore: () async {
+          await Future.delayed(Duration(seconds: 3));
+        },
+        scrollController: scrollController,
+        progressIndicatorWidget: progressIndicatorWidget,
+        errorIndicatorWidget: errorIndicatorWidget));
+
+    scrollToTheEndOfScrollView(scrollController);
+    await tester.pump();
+
+    final progressIndicatorFinder = find.byWidget(progressIndicatorWidget);
+
+    expect(progressIndicatorFinder, findsOneWidget);
+    await tester.pump(Duration(seconds: 3));
+    // await tester.pumpAndSettle();
   });
 }
