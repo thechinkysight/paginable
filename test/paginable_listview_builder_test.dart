@@ -35,16 +35,16 @@ void main() {
   });
 
   testWidgets(
-      "Must return ErrorIndicatorWidget when an exception occurs in loadMore function",
+      "Must return ErrorIndicatorWidget as last item when an exception occurs in loadMore function",
       (WidgetTester tester) async {
     Exception exception = Exception('This is a test exception');
 
     await tester.pumpWidget(TestPaginableListViewBuilder(
-        scrollController: scrollController,
-        progressIndicatorWidget: progressIndicatorWidget,
         loadMore: () async {
           throw exception;
         },
+        scrollController: scrollController,
+        progressIndicatorWidget: progressIndicatorWidget,
         errorIndicatorWidget: errorIndicatorWidget));
 
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
@@ -53,5 +53,23 @@ void main() {
     final exceptionFinder = find.text(exception.toString());
 
     expect(exceptionFinder, findsOneWidget);
+  });
+
+  testWidgets(
+      "Must return an empty Container widget as last item when execution of loadMore function is completed without any exceptions",
+      (WidgetTester tester) async {
+    await tester.pumpWidget(TestPaginableListViewBuilder(
+        loadMore: () async {},
+        scrollController: scrollController,
+        progressIndicatorWidget: progressIndicatorWidget,
+        errorIndicatorWidget: errorIndicatorWidget));
+
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    await tester.pump();
+
+    WidgetPredicate isAnEmptyContainer =
+        (Widget widget) => widget is Container && widget.child == null;
+
+    expect(find.byWidgetPredicate(isAnEmptyContainer), findsOneWidget);
   });
 }
