@@ -10,21 +10,22 @@ void main() {
     child: Center(child: CircularProgressIndicator()),
   );
 
-  Widget errorIndicatorWidget(exception, tryAgain) => Container(
-      color: Colors.redAccent,
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(exception.toString()),
-          ElevatedButton(
-            onPressed: tryAgain,
-            child: Text("Try Again"),
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.green)),
-          )
-        ],
-      ));
+  Widget errorIndicatorWidget(Exception exception, void Function() tryAgain) =>
+      Container(
+          color: Colors.redAccent,
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(exception.toString()),
+              ElevatedButton(
+                onPressed: tryAgain,
+                child: Text("Try Again"),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green)),
+              )
+            ],
+          ));
 
   void scrollToTheEndOfScrollView(ScrollController scrollController) {
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
@@ -38,28 +39,49 @@ void main() {
     scrollController.dispose();
   });
 
-  testWidgets(
+  group(
       "Must return the errorIndicatorWidget as last item when an exception occurs in the loadMore function",
-      (WidgetTester tester) async {
+      () {
     Exception exception = Exception('This is a test exception');
+    testWidgets("Check whether there is a red Container widget",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(TestPaginableListViewBuilder(
+          loadMore: () async {
+            throw exception;
+          },
+          scrollController: scrollController,
+          progressIndicatorWidget: progressIndicatorWidget,
+          errorIndicatorWidget: errorIndicatorWidget));
 
-    await tester.pumpWidget(TestPaginableListViewBuilder(
-        loadMore: () async {
-          throw exception;
-        },
-        scrollController: scrollController,
-        progressIndicatorWidget: progressIndicatorWidget,
-        errorIndicatorWidget: errorIndicatorWidget));
+      scrollToTheEndOfScrollView(scrollController);
 
-    scrollToTheEndOfScrollView(scrollController);
+      await tester.pump();
 
-    await tester.pump();
+      WidgetPredicate isAnRedContainer = (Widget widget) =>
+          widget is Container && widget.color == Colors.redAccent;
 
-    final exceptionFinder = find.text(exception.toString());
+      expect(find.byWidgetPredicate(isAnRedContainer), findsOneWidget);
+    });
 
-    expect(exceptionFinder, findsOneWidget);
+    testWidgets(
+        "Check whether there is an Text widget containing exception log",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(TestPaginableListViewBuilder(
+          loadMore: () async {
+            throw exception;
+          },
+          scrollController: scrollController,
+          progressIndicatorWidget: progressIndicatorWidget,
+          errorIndicatorWidget: errorIndicatorWidget));
 
-    //TODO: Check whether we can find a Container widget with color property set to Colors.redAccent or not.
+      scrollToTheEndOfScrollView(scrollController);
+
+      await tester.pump();
+
+      final exceptionFinder = find.text(exception.toString());
+
+      expect(exceptionFinder, findsOneWidget);
+    });
   });
 
   testWidgets(
