@@ -39,49 +39,28 @@ void main() {
     scrollController.dispose();
   });
 
-  group(
+  testWidgets(
       "The errorIndicatorWidget should return as last item when an exception occurs in the loadMore() function",
-      () {
+      (WidgetTester tester) async {
     Exception exception = Exception('This is a test exception');
-    testWidgets("Check whether there is a red Container widget",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(TestPaginableListViewBuilder(
-          loadMore: () async {
-            throw exception;
-          },
-          scrollController: scrollController,
-          progressIndicatorWidget: progressIndicatorWidget,
-          errorIndicatorWidget: errorIndicatorWidget));
+    await tester.pumpWidget(TestPaginableListViewBuilder(
+        loadMore: () async {
+          throw exception;
+        },
+        scrollController: scrollController,
+        progressIndicatorWidget: progressIndicatorWidget,
+        errorIndicatorWidget: errorIndicatorWidget));
 
-      scrollToTheEndOfScrollView(scrollController);
+    scrollToTheEndOfScrollView(scrollController);
 
-      await tester.pump();
+    await tester.pump();
 
-      WidgetPredicate redContainer = (Widget widget) =>
-          widget is Container && widget.color == Colors.redAccent;
+    final exceptionFinder = find.text(exception.toString());
+    WidgetPredicate redContainer = (Widget widget) =>
+        widget is Container && widget.color == Colors.redAccent;
 
-      expect(find.byWidgetPredicate(redContainer), findsOneWidget);
-    });
-
-    testWidgets(
-        "Check whether there is an Text widget containing exception log",
-        (WidgetTester tester) async {
-      await tester.pumpWidget(TestPaginableListViewBuilder(
-          loadMore: () async {
-            throw exception;
-          },
-          scrollController: scrollController,
-          progressIndicatorWidget: progressIndicatorWidget,
-          errorIndicatorWidget: errorIndicatorWidget));
-
-      scrollToTheEndOfScrollView(scrollController);
-
-      await tester.pump();
-
-      final exceptionFinder = find.text(exception.toString());
-
-      expect(exceptionFinder, findsOneWidget);
-    });
+    expect(exceptionFinder, findsOneWidget);
+    expect(find.byWidgetPredicate(redContainer), findsOneWidget);
   });
 
   group(
