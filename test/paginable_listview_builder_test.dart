@@ -67,7 +67,7 @@ void main() {
       "An empty Container widget should return as last item when the loadMore() function executes without any exceptions",
       () {
     testWidgets(
-        "An empty Container widget should return when loadMore() function executes without any exceptions",
+        "An empty Container widget should return when loadMore() function executes immediately without any exceptions",
         (WidgetTester tester) async {
       await tester.pumpWidget(TestPaginableListViewBuilder(
           loadMore: () async {},
@@ -106,7 +106,7 @@ void main() {
   });
 
   testWidgets(
-      "Must return the progressIndicatorWidget as last item when the loadMore() function is being executed",
+      "The progressIndicatorWidget should return as last item when the loadMore() function is being executed",
       (WidgetTester tester) async {
     await tester.pumpWidget(TestPaginableListViewBuilder(
         loadMore: () async {
