@@ -40,7 +40,7 @@ void main() {
   });
 
   group(
-      "Must return the errorIndicatorWidget as last item when an exception occurs in the loadMore function",
+      "The errorIndicatorWidget should return as last item when an exception occurs in the loadMore() function",
       () {
     Exception exception = Exception('This is a test exception');
     testWidgets("Check whether there is a red Container widget",
@@ -57,10 +57,10 @@ void main() {
 
       await tester.pump();
 
-      WidgetPredicate isAnRedContainer = (Widget widget) =>
+      WidgetPredicate redContainer = (Widget widget) =>
           widget is Container && widget.color == Colors.redAccent;
 
-      expect(find.byWidgetPredicate(isAnRedContainer), findsOneWidget);
+      expect(find.byWidgetPredicate(redContainer), findsOneWidget);
     });
 
     testWidgets(
@@ -84,26 +84,50 @@ void main() {
     });
   });
 
-  testWidgets(
-      "Must return an empty Container widget as last item when execution of loadMore function is completed without any exceptions",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(TestPaginableListViewBuilder(
-        loadMore: () async {},
-        scrollController: scrollController,
-        progressIndicatorWidget: progressIndicatorWidget,
-        errorIndicatorWidget: errorIndicatorWidget));
+  group(
+      "An empty Container widget should return as last item when the loadMore() function executes without any exceptions",
+      () {
+    testWidgets(
+        "An empty Container widget should return when loadMore() function executes without any exceptions",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(TestPaginableListViewBuilder(
+          loadMore: () async {},
+          scrollController: scrollController,
+          progressIndicatorWidget: progressIndicatorWidget,
+          errorIndicatorWidget: errorIndicatorWidget));
 
-    scrollToTheEndOfScrollView(scrollController);
-    await tester.pump();
+      scrollToTheEndOfScrollView(scrollController);
+      await tester.pump();
 
-    WidgetPredicate isAnEmptyContainer =
-        (Widget widget) => widget is Container && widget.child == null;
+      WidgetPredicate emptyContainer =
+          (Widget widget) => widget is Container && widget.child == null;
 
-    expect(find.byWidgetPredicate(isAnEmptyContainer), findsOneWidget);
+      expect(find.byWidgetPredicate(emptyContainer), findsOneWidget);
+    });
+
+    testWidgets(
+        "An empty Container widget should return when loadMore() function executes after a delay without any exceptions",
+        (WidgetTester tester) async {
+      await tester.pumpWidget(TestPaginableListViewBuilder(
+          loadMore: () async {
+            await Future.delayed(Duration(seconds: 3));
+          },
+          scrollController: scrollController,
+          progressIndicatorWidget: progressIndicatorWidget,
+          errorIndicatorWidget: errorIndicatorWidget));
+
+      scrollToTheEndOfScrollView(scrollController);
+      await tester.pump(Duration(seconds: 3));
+
+      WidgetPredicate emptyContainer =
+          (Widget widget) => widget is Container && widget.child == null;
+
+      expect(find.byWidgetPredicate(emptyContainer), findsOneWidget);
+    });
   });
 
   testWidgets(
-      "Must return the progressIndicatorWidget as last item when the loadMore function is being executed",
+      "Must return the progressIndicatorWidget as last item when the loadMore() function is being executed",
       (WidgetTester tester) async {
     await tester.pumpWidget(TestPaginableListViewBuilder(
         loadMore: () async {
@@ -116,9 +140,10 @@ void main() {
     scrollToTheEndOfScrollView(scrollController);
     await tester.pump();
 
-    final progressIndicatorFinder = find.byWidget(progressIndicatorWidget);
+    final progressIndicatorWidgetFinder =
+        find.byWidget(progressIndicatorWidget);
 
-    expect(progressIndicatorFinder, findsOneWidget);
+    expect(progressIndicatorWidgetFinder, findsOneWidget);
     await tester.pump(Duration(seconds: 3));
     // await tester.pumpAndSettle();
   });
