@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'widgets/test_paginable_listview_builder.dart';
+import 'package:paginable/paginable.dart';
 
 void main() {
   late ScrollController scrollController;
@@ -43,7 +43,7 @@ void main() {
       "The errorIndicatorWidget should return as last item when an exception occurs in the loadMore() function",
       (WidgetTester tester) async {
     Exception exception = Exception('This is a test exception');
-    await tester.pumpWidget(TestPaginableListViewBuilder(
+    await tester.pumpWidget(FakePaginableListViewBuilder(
         loadMore: () async {
           throw exception;
         },
@@ -69,7 +69,7 @@ void main() {
     testWidgets(
         "An empty Container widget should return when loadMore() function executes immediately without any exceptions",
         (WidgetTester tester) async {
-      await tester.pumpWidget(TestPaginableListViewBuilder(
+      await tester.pumpWidget(FakePaginableListViewBuilder(
           loadMore: () async {},
           scrollController: scrollController,
           progressIndicatorWidget: progressIndicatorWidget,
@@ -87,7 +87,7 @@ void main() {
     testWidgets(
         "An empty Container widget should return when loadMore() function executes after a delay without any exceptions",
         (WidgetTester tester) async {
-      await tester.pumpWidget(TestPaginableListViewBuilder(
+      await tester.pumpWidget(FakePaginableListViewBuilder(
           loadMore: () async {
             await Future.delayed(Duration(seconds: 3));
           },
@@ -108,7 +108,7 @@ void main() {
   testWidgets(
       "The progressIndicatorWidget should return as last item when the loadMore() function is being executed",
       (WidgetTester tester) async {
-    await tester.pumpWidget(TestPaginableListViewBuilder(
+    await tester.pumpWidget(FakePaginableListViewBuilder(
         loadMore: () async {
           await Future.delayed(Duration(seconds: 3));
         },
@@ -126,4 +126,40 @@ void main() {
     await tester.pump(Duration(seconds: 3));
     // await tester.pumpAndSettle();
   });
+}
+
+class FakePaginableListViewBuilder extends StatelessWidget {
+  final List<int> numbers = List.generate(30, (index) => index);
+  final ScrollController scrollController;
+  final Widget progressIndicatorWidget;
+  final Widget Function(Exception exception, void Function() tryAgain)
+      errorIndicatorWidget;
+  final Future<void> Function() loadMore;
+
+  FakePaginableListViewBuilder(
+      {Key? key,
+      required this.loadMore,
+      required this.scrollController,
+      required this.progressIndicatorWidget,
+      required this.errorIndicatorWidget})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: SafeArea(
+        child: Scaffold(
+          body: PaginableListViewBuilder(
+              controller: scrollController,
+              errorIndicatorWidget: this.errorIndicatorWidget,
+              itemBuilder: (BuildContext context, int index) => ListTile(
+                    title: Text(numbers[index].toString()),
+                  ),
+              itemCount: numbers.length,
+              loadMore: this.loadMore,
+              progressIndicatorWidget: this.progressIndicatorWidget),
+        ),
+      ),
+    );
+  }
 }
