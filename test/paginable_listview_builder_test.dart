@@ -43,7 +43,7 @@ void main() {
       "The errorIndicatorWidget should return as last item when an exception occurs in the loadMore() function",
       (WidgetTester tester) async {
     Exception exception = Exception('This is a test exception');
-    await tester.pumpWidget(FakePaginableListViewBuilder(
+    await tester.pumpWidget(TestApp(
         loadMore: () async {
           throw exception;
         },
@@ -69,7 +69,7 @@ void main() {
     testWidgets(
         "An empty Container widget should return when loadMore() function executes immediately without any exceptions",
         (WidgetTester tester) async {
-      await tester.pumpWidget(FakePaginableListViewBuilder(
+      await tester.pumpWidget(TestApp(
           loadMore: () async {},
           scrollController: scrollController,
           progressIndicatorWidget: progressIndicatorWidget,
@@ -87,7 +87,7 @@ void main() {
     testWidgets(
         "An empty Container widget should return when loadMore() function executes after a delay without any exceptions",
         (WidgetTester tester) async {
-      await tester.pumpWidget(FakePaginableListViewBuilder(
+      await tester.pumpWidget(TestApp(
           loadMore: () async {
             await Future.delayed(Duration(seconds: 3));
           },
@@ -108,7 +108,7 @@ void main() {
   testWidgets(
       "The progressIndicatorWidget should return as last item when the loadMore() function is being executed",
       (WidgetTester tester) async {
-    await tester.pumpWidget(FakePaginableListViewBuilder(
+    await tester.pumpWidget(TestApp(
         loadMore: () async {
           await Future.delayed(Duration(seconds: 3));
         },
@@ -128,7 +128,7 @@ void main() {
   });
 }
 
-class FakePaginableListViewBuilder extends StatelessWidget {
+class TestApp extends StatelessWidget {
   final List<int> numbers = List.generate(30, (index) => index);
   final ScrollController scrollController;
   final Widget progressIndicatorWidget;
@@ -136,7 +136,7 @@ class FakePaginableListViewBuilder extends StatelessWidget {
       errorIndicatorWidget;
   final Future<void> Function() loadMore;
 
-  FakePaginableListViewBuilder(
+  TestApp(
       {Key? key,
       required this.loadMore,
       required this.scrollController,
