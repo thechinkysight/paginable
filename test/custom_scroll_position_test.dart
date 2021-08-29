@@ -3,66 +3,76 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:paginable/src/utils/custom_scroll_position.dart';
 
 void main() {
-  group('These are tests for isScrollingDownwards()', () {
-    late ScrollController scrollController;
+  late ScrollController scrollController;
 
-    setUp(() {
-      scrollController = ScrollController();
-    });
+  setUp(() {
+    scrollController = ScrollController();
+  });
 
-    tearDown(() {
-      scrollController.dispose();
-    });
-    testWidgets(
-        'isScrollingDownwards() should return true when we are scrolling downwards',
-        (WidgetTester tester) async {
-      late bool isScrollingDownwards;
+  tearDown(() {
+    scrollController.dispose();
+  });
 
-      await tester.pumpWidget(TestApp(
-          scrollController: scrollController,
-          onNotification: (scrollUpdateNotification) {
-            CustomScrollPosition customScrollPosition =
-                CustomScrollPosition(scrollUpdateNotification);
+  testWidgets(
+      'isScrollingDownwards() should only return true when we are scrolling downwards',
+      (WidgetTester tester) async {
+    late bool isScrollingDownwards;
 
-            isScrollingDownwards = customScrollPosition.isScrollingDownwards();
+    await tester.pumpWidget(TestApp(
+        scrollController: scrollController,
+        onNotification: (scrollUpdateNotification) {
+          CustomScrollPosition customScrollPosition =
+              CustomScrollPosition(scrollUpdateNotification);
 
-            return true;
-          }));
+          isScrollingDownwards = customScrollPosition.isScrollingDownwards();
+          return true;
+        }));
 
-      scrollController.jumpTo(scrollController.position.maxScrollExtent * .5);
+    scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
 
-      await tester.pump();
+    await tester.pump();
 
-      expect(isScrollingDownwards, true);
-    });
+    expect(isScrollingDownwards, true);
 
-    testWidgets(
-        'isScrollingDownwards() should return false when we are scrolling upwards',
-        (WidgetTester tester) async {
-      late bool isScrollingDownwards;
+    scrollController.jumpTo(scrollController.position.maxScrollExtent * .1);
 
-      await tester.pumpWidget(TestApp(
-          scrollController: scrollController,
-          onNotification: (scrollUpdateNotification) {
-            CustomScrollPosition customScrollPosition =
-                CustomScrollPosition(scrollUpdateNotification);
+    await tester.pump();
 
-            isScrollingDownwards = customScrollPosition.isScrollingDownwards();
-            return true;
-          }));
+    expect(isScrollingDownwards, false);
+  });
 
-      scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
+  testWidgets(
+      'isAlmostAtTheEndOfTheScroll() should only return true when we are at 80% or more of the max scroll',
+      (WidgetTester tester) async {
+    late bool isAlmostAtTheEndOfTheScroll;
 
-      await tester.pump();
+    await tester.pumpWidget(TestApp(
+        scrollController: scrollController,
+        onNotification: (scrollUpdateNotification) {
+          CustomScrollPosition customScrollPosition =
+              CustomScrollPosition(scrollUpdateNotification);
+          isAlmostAtTheEndOfTheScroll =
+              customScrollPosition.isAlmostAtTheEndOfTheScroll();
+          return true;
+        }));
 
-      expect(isScrollingDownwards, true);
+    scrollController.jumpTo(scrollController.position.maxScrollExtent * .9);
 
-      scrollController.jumpTo(scrollController.position.maxScrollExtent * .1);
+    await tester.pump();
 
-      await tester.pump();
+    expect(isAlmostAtTheEndOfTheScroll, true);
 
-      expect(isScrollingDownwards, false);
-    });
+    scrollController.jumpTo(scrollController.position.maxScrollExtent * .7);
+
+    await tester.pump();
+
+    expect(isAlmostAtTheEndOfTheScroll, false);
+
+    scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
+
+    await tester.pump();
+
+    expect(isAlmostAtTheEndOfTheScroll, true);
   });
 }
 
