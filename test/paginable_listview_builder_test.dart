@@ -151,13 +151,13 @@ class TestApp extends StatelessWidget {
         child: Scaffold(
           body: PaginableListViewBuilder(
               controller: scrollController,
-              errorIndicatorWidget: this.errorIndicatorWidget,
+              errorIndicatorWidget: errorIndicatorWidget,
               itemBuilder: (BuildContext context, int index) => ListTile(
                     title: Text(numbers[index].toString()),
                   ),
               itemCount: numbers.length,
-              loadMore: this.loadMore,
-              progressIndicatorWidget: this.progressIndicatorWidget),
+              loadMore: loadMore,
+              progressIndicatorWidget: progressIndicatorWidget),
         ),
       ),
     );
