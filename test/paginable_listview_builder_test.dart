@@ -31,11 +31,11 @@ void main() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
-  setUp(() async {
+  setUp(() {
     scrollController = ScrollController();
   });
 
-  tearDown(() async {
+  tearDown(() {
     scrollController.dispose();
   });
 
