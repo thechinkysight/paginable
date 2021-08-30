@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:paginable/src/last_item.dart';
+import 'package:paginable/src/utils/last_item.dart';
 import 'package:provider/provider.dart';
 
 class PaginableSliverChildBuilderDelegate {
