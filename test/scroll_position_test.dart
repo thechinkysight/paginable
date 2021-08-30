@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:paginable/src/utils/custom_scroll_position.dart';
+import 'package:paginable/src/utils/scroll_position.dart';
 
 void main() {
   late ScrollController scrollController;
@@ -16,15 +16,14 @@ void main() {
   testWidgets(
       'isScrollingDownwards() should only return true when we are scrolling downwards',
       (WidgetTester tester) async {
-    late bool isScrollingDownwards;
+    late bool isScrollingDownwardsTest;
 
     await tester.pumpWidget(TestApp(
         scrollController: scrollController,
         onNotification: (scrollUpdateNotification) {
-          CustomScrollPosition customScrollPosition =
-              CustomScrollPosition(scrollUpdateNotification);
+          isScrollingDownwardsTest =
+              isScrollingDownwards(scrollUpdateNotification);
 
-          isScrollingDownwards = customScrollPosition.isScrollingDownwards();
           return true;
         }));
 
@@ -32,27 +31,25 @@ void main() {
 
     await tester.pump();
 
-    expect(isScrollingDownwards, true);
+    expect(isScrollingDownwardsTest, true);
 
     scrollController.jumpTo(scrollController.position.maxScrollExtent * .1);
 
     await tester.pump();
 
-    expect(isScrollingDownwards, false);
+    expect(isScrollingDownwardsTest, false);
   });
 
   testWidgets(
       'isAlmostAtTheEndOfTheScroll() should only return true when we are at 80% or more of the max scroll',
       (WidgetTester tester) async {
-    late bool isAlmostAtTheEndOfTheScroll;
+    late bool isAlmostAtTheEndOfTheScrollTest;
 
     await tester.pumpWidget(TestApp(
         scrollController: scrollController,
         onNotification: (scrollUpdateNotification) {
-          CustomScrollPosition customScrollPosition =
-              CustomScrollPosition(scrollUpdateNotification);
-          isAlmostAtTheEndOfTheScroll =
-              customScrollPosition.isAlmostAtTheEndOfTheScroll();
+          isAlmostAtTheEndOfTheScrollTest =
+              isAlmostAtTheEndOfTheScroll(scrollUpdateNotification);
           return true;
         }));
 
@@ -60,19 +57,19 @@ void main() {
 
     await tester.pump();
 
-    expect(isAlmostAtTheEndOfTheScroll, true);
+    expect(isAlmostAtTheEndOfTheScrollTest, true);
 
     scrollController.jumpTo(scrollController.position.maxScrollExtent * .7);
 
     await tester.pump();
 
-    expect(isAlmostAtTheEndOfTheScroll, false);
+    expect(isAlmostAtTheEndOfTheScrollTest, false);
 
     scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
 
     await tester.pump();
 
-    expect(isAlmostAtTheEndOfTheScroll, true);
+    expect(isAlmostAtTheEndOfTheScrollTest, true);
   });
 }
 
