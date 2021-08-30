@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'last_item.dart';
+import 'utils/last_item.dart';
 
 class PaginableCustomScrollView extends StatefulWidget {
   final Future<void> Function() loadMore;
