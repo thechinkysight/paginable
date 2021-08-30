@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'last_item.dart';
+import 'utils/last_item.dart';
+import 'utils/scroll_position.dart';
 
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
@@ -66,15 +67,6 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   bool isLoadMoreBeingCalled = false;
 
   void tryAgain() => performPagination();
-
-  bool isAlmostAtTheEndOfTheScroll(
-          ScrollUpdateNotification scrollUpdateNotification) =>
-      scrollUpdateNotification.metrics.pixels >=
-      scrollUpdateNotification.metrics.maxScrollExtent * 0.8;
-
-  bool isScrollingDownwards(
-          ScrollUpdateNotification scrollUpdateNotification) =>
-      scrollUpdateNotification.scrollDelta! > 0.0;
 
   Future<void> performPagination() async {
     valueNotifier.value = LastItem.ProgressIndicator;
