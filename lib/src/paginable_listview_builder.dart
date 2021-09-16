@@ -60,7 +60,7 @@ class PaginableListViewBuilder extends StatefulWidget {
 
 class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   ValueNotifier<LastItem> valueNotifier =
-      ValueNotifier(LastItem.ProgressIndicator);
+      ValueNotifier(LastItem.progressIndicator);
 
   late Exception exception;
 
@@ -69,15 +69,15 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   void tryAgain() => performPagination();
 
   Future<void> performPagination() async {
-    valueNotifier.value = LastItem.ProgressIndicator;
+    valueNotifier.value = LastItem.progressIndicator;
     isLoadMoreBeingCalled = true;
     try {
       await widget.loadMore();
       isLoadMoreBeingCalled = false;
-      valueNotifier.value = LastItem.EmptyContainer;
+      valueNotifier.value = LastItem.emptyContainer;
     } on Exception catch (exception) {
       this.exception = exception;
-      valueNotifier.value = LastItem.ErrorIndicator;
+      valueNotifier.value = LastItem.errorIndicator;
     }
   }
 
@@ -109,11 +109,11 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
                 return ValueListenableBuilder<LastItem>(
                     valueListenable: valueNotifier,
                     builder: (context, value, child) {
-                      if (value == LastItem.EmptyContainer) {
+                      if (value == LastItem.emptyContainer) {
                         return Container();
-                      } else if (value == LastItem.ErrorIndicator) {
+                      } else if (value == LastItem.errorIndicator) {
                         return widget.errorIndicatorWidget(
-                            this.exception, this.tryAgain);
+                            exception, tryAgain);
                       }
                       return widget.progressIndicatorWidget;
                     });
