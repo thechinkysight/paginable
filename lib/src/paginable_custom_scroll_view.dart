@@ -7,6 +7,7 @@ import 'utils/last_item.dart';
 class PaginableCustomScrollView extends StatefulWidget {
   final Future<void> Function() loadMore;
 
+  // ignore: annotate_overrides, overridden_fields
   final Key? key;
   final Axis scrollDirection;
   final bool reverse;
@@ -25,7 +26,7 @@ class PaginableCustomScrollView extends StatefulWidget {
   final String? restorationId;
   final Clip clipBehavior;
 
-  PaginableCustomScrollView(
+  const PaginableCustomScrollView(
       {this.key,
       this.scrollDirection = Axis.vertical,
       this.reverse = false,
@@ -52,9 +53,8 @@ class PaginableCustomScrollView extends StatefulWidget {
 }
 
 class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
-  
   ValueNotifier<LastItem> valueNotifier =
-      ValueNotifier(LastItem.ProgressIndicator);
+      ValueNotifier(LastItem.progressIndicator);
 
   bool isLoadMoreBeingCalled = false;
 
@@ -72,15 +72,15 @@ class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
       scrollUpdateNotification.scrollDelta! > 0.0;
 
   Future<void> performPagination() async {
-    valueNotifier.value = LastItem.ProgressIndicator;
+    valueNotifier.value = LastItem.progressIndicator;
     isLoadMoreBeingCalled = true;
     try {
       await widget.loadMore();
       isLoadMoreBeingCalled = false;
-      valueNotifier.value = LastItem.EmptyContainer;
+      valueNotifier.value = LastItem.emptyContainer;
     } on Exception catch (exception) {
       exceptionNotifier.value = exception;
-      valueNotifier.value = LastItem.ErrorIndicator;
+      valueNotifier.value = LastItem.errorIndicator;
     }
   }
 

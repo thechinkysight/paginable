@@ -36,9 +36,9 @@ class PaginableSliverChildBuilderDelegate {
           return ValueListenableBuilder<LastItem>(
               valueListenable: context.read<ValueNotifier<LastItem>>(),
               builder: (context, value, child) {
-                if (value == LastItem.EmptyContainer) {
+                if (value == LastItem.emptyContainer) {
                   return Container();
-                } else if (value == LastItem.ErrorIndicator) {
+                } else if (value == LastItem.errorIndicator) {
                   return errorIndicatorWidget(
                       context.read<ValueNotifier<Exception>>().value,
                       context.read<void Function()>());
@@ -49,7 +49,7 @@ class PaginableSliverChildBuilderDelegate {
         return builder(context, index);
       },
           findChildIndexCallback: findChildIndexCallback,
-          childCount: this.childCount == null ? null : this.childCount! + 1,
+          childCount: childCount == null ? null : childCount! + 1,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
           addRepaintBoundaries: addRepaintBoundaries,
           addSemanticIndexes: addSemanticIndexes,

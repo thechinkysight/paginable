@@ -7,7 +7,7 @@ void main() {
 
   Widget progressIndicatorWidget = Container(
     padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Center(child: CircularProgressIndicator()),
+    child: const Center(child: CircularProgressIndicator()),
   );
 
   Widget errorIndicatorWidget(Exception exception, void Function() tryAgain) =>
@@ -20,7 +20,7 @@ void main() {
               Text(exception.toString()),
               ElevatedButton(
                 onPressed: tryAgain,
-                child: Text("Try Again"),
+                child: const Text("Try Again"),
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.green)),
               )
@@ -56,11 +56,11 @@ void main() {
     await tester.pump();
 
     final exceptionFinder = find.text(exception.toString());
-    WidgetPredicate redContainer = (Widget widget) =>
+    bool isRedContainer(Widget widget) =>
         widget is Container && widget.color == Colors.redAccent;
 
     expect(exceptionFinder, findsOneWidget);
-    expect(find.byWidgetPredicate(redContainer), findsOneWidget);
+    expect(find.byWidgetPredicate(isRedContainer), findsOneWidget);
   });
 
   group(
@@ -78,10 +78,9 @@ void main() {
       scrollToTheEndOfScrollView(scrollController);
       await tester.pump();
 
-      WidgetPredicate emptyContainer =
-          (Widget widget) => widget is Container && widget.child == null;
+      bool isEmptyContainer(Widget widget) => widget is Container && widget.child == null;
 
-      expect(find.byWidgetPredicate(emptyContainer), findsOneWidget);
+      expect(find.byWidgetPredicate(isEmptyContainer), findsOneWidget);
     });
 
     testWidgets(
@@ -89,19 +88,18 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(TestApp(
           loadMore: () async {
-            await Future.delayed(Duration(seconds: 3));
+            await Future.delayed(const Duration(seconds: 3));
           },
           scrollController: scrollController,
           progressIndicatorWidget: progressIndicatorWidget,
           errorIndicatorWidget: errorIndicatorWidget));
 
       scrollToTheEndOfScrollView(scrollController);
-      await tester.pump(Duration(seconds: 3));
+      await tester.pump(const Duration(seconds: 3));
 
-      WidgetPredicate emptyContainer =
-          (Widget widget) => widget is Container && widget.child == null;
+      bool isEmptyContainer(Widget widget) => widget is Container && widget.child == null;
 
-      expect(find.byWidgetPredicate(emptyContainer), findsOneWidget);
+      expect(find.byWidgetPredicate(isEmptyContainer), findsOneWidget);
     });
   });
 
@@ -110,7 +108,7 @@ void main() {
       (WidgetTester tester) async {
     await tester.pumpWidget(TestApp(
         loadMore: () async {
-          await Future.delayed(Duration(seconds: 3));
+          await Future.delayed(const Duration(seconds: 3));
         },
         scrollController: scrollController,
         progressIndicatorWidget: progressIndicatorWidget,
@@ -123,7 +121,7 @@ void main() {
         find.byWidget(progressIndicatorWidget);
 
     expect(progressIndicatorWidgetFinder, findsOneWidget);
-    await tester.pump(Duration(seconds: 3));
+    await tester.pump(const Duration(seconds: 3));
     // await tester.pumpAndSettle();
   });
 }
