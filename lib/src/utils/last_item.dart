@@ -1,5 +1,5 @@
 enum LastItem {
-  ProgressIndicator,
-  ErrorIndicator,
-  EmptyContainer
+  progressIndicator,
+  errorIndicator,
+  emptyContainer
 }
