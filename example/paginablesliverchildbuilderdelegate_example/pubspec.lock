@@ -107,7 +107,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "8ba02a0b6eff2bedf94c9a807a0d4f9505fa0298"
+      resolved-ref: d2c638e7810a655d3e8afdfd2d253e70903d3dbe
       url: "https://github.com/chinkysight/paginable"
     source: git
     version: "0.0.1"
@@ -124,7 +124,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.0"
+    version: "6.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
