@@ -105,12 +105,10 @@ packages:
   paginable:
     dependency: "direct main"
     description:
-      path: "."
-      ref: main
-      resolved-ref: "8ba02a0b6eff2bedf94c9a807a0d4f9505fa0298"
-      url: "https://github.com/chinkysight/paginable"
-    source: git
-    version: "0.0.1"
+      name: paginable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
