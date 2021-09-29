@@ -5,12 +5,10 @@ Paginable is a Flutter package which makes pagination easier.
 <p>
   <img src="https://github.com/chinkysight/paginable/blob/main/doc_assets/PaginableListViewBuilder.gif?raw=true"
     alt="An animated image of the PaginableListViewBuilder" height="500"/>
-  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://github.com/chinkysight/paginable/blob/main/doc_assets/PaginableListViewBuilder_Error.gif?raw=true"
    alt="An animated image of the PaginableListViewBuilder with error" height="500"/>
    <img src="https://github.com/chinkysight/paginable/blob/main/doc_assets/PaginableSliverChildBuilderDelegate.gif?raw=true"
     alt="An animated image of the PaginableListViewBuilder" height="500"/>
-  &nbsp;&nbsp;&nbsp;&nbsp;
   <img src="https://github.com/chinkysight/paginable/blob/main/doc_assets/PaginableSliverChildBuilderDelegate_Error.gif?raw=true"
    alt="An animated image of the PaginableListViewBuilder with error" height="500"/>
 </p>
