@@ -1,5 +1,3 @@
-# Paginable
-
 Paginable is a Flutter package which makes pagination easier.
 
 <p>
@@ -18,37 +16,6 @@ Paginable is a Flutter package which makes pagination easier.
 - `PaginableListViewBuilder` is paginable's version of [`ListView.builder`](https://api.flutter.dev/flutter/widgets/ListView-class.html)
 - `PaginableCustomScrollView` is paginable's version of [`CustomScrollView`](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html)
 - `PaginableSliverChildBuilderDelegate` is paginable's version of [`SliverChildBuilderDelegate`](https://api.flutter.dev/flutter/widgets/SliverChildBuilderDelegate-class.html)
-
-## Getting Started
-
-To start using paginable, first you need to add it to your pubspec.yaml and you can do it by running following command:
-
-```bash
-flutter pub add paginable
-```
-
-This will add a line like this to your package's pubspec.yaml:
-
-```bash
-dependencies:
-    paginable: ^1.0.0
-```
-
-By default, IDEs automatically gets the package's files after adding the package to the pubspec.yaml. In case they didn't, you can do it manually by running following command:
-
-```bash
-flutter pub get
-```
-
-Now you can simply import the package:
-
-```dart
-import 'package:paginable/paginable.dart';
-```
-
-For help getting started with Flutter, you can check Flutter's [online documentation](https://flutter.dev/docs), which offers tutorials, samples, guidance on mobile development, and a full API reference.
-
-For more information on package dependencies, [https://dart.dev/tools/pub/dependencies](https://dart.dev/tools/pub/dependencies)
 
 ## Usage
 
@@ -192,8 +159,8 @@ You might miss that the parameter `loadMore` is in `PaginableCustomScrollView`, 
 
 ## Examples
 
-- [Using `PaginableListViewBuilder`](https://github.com/chinkysight/paginable/tree/main/examples/paginablelistviewbuilder_example)
-- [Using `PaginableCustomScrollView` with `PaginableSliverChildBuilderDelegate`](https://github.com/chinkysight/paginable/tree/main/examples/paginablesliverchildbuilderdelegate_example)
+- [Using `PaginableListViewBuilder`](https://github.com/chinkysight/paginable/tree/main/example/paginablelistviewbuilder_example)
+- [Using `PaginableCustomScrollView` with `PaginableSliverChildBuilderDelegate`](https://github.com/chinkysight/paginable/tree/main/example/paginablesliverchildbuilderdelegate_example)
 
 ## Contribution
 
