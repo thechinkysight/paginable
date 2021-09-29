@@ -78,7 +78,8 @@ void main() {
       scrollToTheEndOfScrollView(scrollController);
       await tester.pump();
 
-      bool isEmptyContainer(Widget widget) => widget is Container && widget.child == null;
+      bool isEmptyContainer(Widget widget) =>
+          widget is Container && widget.child == null;
 
       expect(find.byWidgetPredicate(isEmptyContainer), findsOneWidget);
     });
@@ -97,7 +98,8 @@ void main() {
       scrollToTheEndOfScrollView(scrollController);
       await tester.pump(const Duration(seconds: 3));
 
-      bool isEmptyContainer(Widget widget) => widget is Container && widget.child == null;
+      bool isEmptyContainer(Widget widget) =>
+          widget is Container && widget.child == null;
 
       expect(find.byWidgetPredicate(isEmptyContainer), findsOneWidget);
     });

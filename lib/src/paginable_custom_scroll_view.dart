@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 
 import 'utils/last_item.dart';
 
+/// It is the paginable's version of [CustomScrollView](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html) and it is used along with [PaginableSliverChildBuilderDelegate](https://pub.dev/packages/paginable#using-paginablecustomscrollview-with-paginablesliverchildbuilderdelegate) to perform pagination.
 class PaginableCustomScrollView extends StatefulWidget {
+  /// It takes an async function which will be executed when the scroll is almost at the end.
   final Future<void> Function() loadMore;
 
   // ignore: annotate_overrides, overridden_fields
@@ -19,6 +21,8 @@ class PaginableCustomScrollView extends StatefulWidget {
   final Key? center;
   final double anchor;
   final double? cacheExtent;
+
+  /// The slivers to place inside the viewport.
   final List<Widget> slivers;
   final int? semanticChildCount;
   final DragStartBehavior dragStartBehavior;
@@ -26,6 +30,9 @@ class PaginableCustomScrollView extends StatefulWidget {
   final String? restorationId;
   final Clip clipBehavior;
 
+  /// Creates a [ScrollView] that creates custom scroll effects using slivers.
+  ///
+  /// See the [ScrollView] constructor for more details on these arguments.
   const PaginableCustomScrollView(
       {this.key,
       this.scrollDirection = Axis.vertical,

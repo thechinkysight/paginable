@@ -3,12 +3,26 @@ import 'package:flutter/material.dart';
 import 'utils/last_item.dart';
 import 'utils/scroll_position.dart';
 
+/// It is paginable's version of [ListView.builder](https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html)
 class PaginableListViewBuilder extends StatefulWidget {
   final double? itemExtent;
+
+  /// It takes a function which contains two parameters, one being of type `Exception` and other being a
+  /// `Function()`, returning a widget which will be displayed at the bottom of the scrollview when an
+  /// exception occurs in the async function which we passed to the `loadMore` parameter.
+  ///
+  /// The parameter with type `Exception` will contain the exception which occured while executing the
+  /// function passed to the parameter `loadMore` if exception occured, and the parameter with type `Function()`
+  /// will contain the same function which we passed to the `loadMore` parameter.
   final Widget Function(Exception exception, void Function() tryAgain)
       errorIndicatorWidget;
+
+  /// It takes a widget which will be displayed at the bottom of the scrollview to indicate the user that
+  /// the async function we passed to the `loadMore` parameter is being executed.
   final Widget progressIndicatorWidget;
   final Widget Function(BuildContext context, int index) itemBuilder;
+
+  /// It takes an async function which will be executed when the scroll is almost at the end.
   final Future<void> Function() loadMore;
   final ScrollController? controller;
   final Axis scrollDirection;
@@ -27,6 +41,8 @@ class PaginableListViewBuilder extends StatefulWidget {
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
+
+  /// Creates a scrollable, linear array of widgets that are created on demand.
   const PaginableListViewBuilder(
       {Key? key,
       this.scrollDirection = Axis.vertical,
@@ -112,8 +128,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
                       if (value == LastItem.emptyContainer) {
                         return Container();
                       } else if (value == LastItem.errorIndicator) {
-                        return widget.errorIndicatorWidget(
-                            exception, tryAgain);
+                        return widget.errorIndicatorWidget(exception, tryAgain);
                       }
                       return widget.progressIndicatorWidget;
                     });

@@ -1,5 +1,1 @@
-enum LastItem {
-  progressIndicator,
-  errorIndicator,
-  emptyContainer
-}
+enum LastItem { progressIndicator, errorIndicator, emptyContainer }

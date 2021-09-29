@@ -1,3 +1,5 @@
+[![pub package](https://img.shields.io/pub/v/paginable.svg)](https://pub.dev/packages/paginable)
+
 Paginable is a Flutter package which makes pagination easier.
 
 <p>
@@ -13,7 +15,7 @@ Paginable is a Flutter package which makes pagination easier.
 
 ## Paginable Widgets
 
-- `PaginableListViewBuilder` is paginable's version of [`ListView.builder`](https://api.flutter.dev/flutter/widgets/ListView-class.html)
+- `PaginableListViewBuilder` is paginable's version of [`ListView.builder`](https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html)
 - `PaginableCustomScrollView` is paginable's version of [`CustomScrollView`](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html)
 - `PaginableSliverChildBuilderDelegate` is paginable's version of [`SliverChildBuilderDelegate`](https://api.flutter.dev/flutter/widgets/SliverChildBuilderDelegate-class.html)
 
@@ -156,11 +158,6 @@ You might miss that the parameter `loadMore` is in `PaginableCustomScrollView`, 
 > It is worth noting that Paginable is only resposible for executing the async function passed to the `loadMore` parameter when the scroll is almost at the end, displaying `errorIndicatorWidget` at the bottom of the scrollview when an exception occurs in the `loadMore` and displaying `progressIndicatorWidget` at the bottom of the scrollview to indicate the user that the `loadMore` is being executed.
 >
 > Paginable is not resposible for managing states, to know about different ways of managing states in Flutter, [https://flutter.dev/docs/development/data-and-backend/state-mgmt/options](https://flutter.dev/docs/development/data-and-backend/state-mgmt/options)
-
-## Examples
-
-- [Using `PaginableListViewBuilder`](https://github.com/chinkysight/paginable/tree/main/example/paginablelistviewbuilder_example)
-- [Using `PaginableCustomScrollView` with `PaginableSliverChildBuilderDelegate`](https://github.com/chinkysight/paginable/tree/main/example/paginablesliverchildbuilderdelegate_example)
 
 ## Contribution
 
