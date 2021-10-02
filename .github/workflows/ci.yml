@@ -1,16 +1,10 @@
-# This is a basic workflow to help you get started with Actions
 name: CI
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+on:
+  pull_request:
+    branches: [main, dev]
+
 jobs:
-  # This workflow contains a single job called "build"
   flutter_test:
     name: Run flutter test and analyze
     runs-on: ubuntu-latest
@@ -23,6 +17,18 @@ jobs:
       - uses: subosito/flutter-action@v1.5.3
         with:
           channel: "stable"
-      - run: flutter pub get
-#       - run: flutter analyze
-      - run: flutter test
+          
+      - name: Testing and analyzing paginablelistviewbuilder_example
+        run: cd example/paginablelistviewbuilder_example/ && flutter pub get && flutter analyze && flutter test
+
+      - name: Testing and analyzing paginablelistviewbuilder_example
+        run: cd example/paginablesliverchildbuilderdelegate_example/ && flutter pub get && flutter analyze && flutter test
+
+      - name: Testing and analyzing paginable
+        run: flutter pub get && flutter analyze && flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage/lcov.info
+
