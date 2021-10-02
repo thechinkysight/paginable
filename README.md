@@ -1,4 +1,5 @@
 [![pub package](https://img.shields.io/pub/v/paginable.svg)](https://pub.dev/packages/paginable)
+[![CI](https://github.com/chinkysight/paginable/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/chinkysight/paginable/actions/workflows/ci.yml)
 
 Paginable is a Flutter package which makes pagination easier.
 
