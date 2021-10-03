@@ -19,15 +19,18 @@ jobs:
       - uses: subosito/flutter-action@v1.5.3
         with:
           channel: "stable"
+          
+      - name: Testing and analyzing paginablelistviewbuilder_example
+        run: cd example/paginablelistviewbuilder_example/ && flutter pub get && flutter analyze && flutter test
 
-      - run: cd example/paginablelistviewbuilder_example/ && flutter pub get
-      - run: cd example/paginablelistviewbuilder_example/ && flutter analyze
-      - run: cd example/paginablelistviewbuilder_example/ && flutter test
+      - name: Testing and analyzing paginablelistviewbuilder_example
+        run: cd example/paginablesliverchildbuilderdelegate_example/ && flutter pub get && flutter analyze && flutter test
 
-      - run: cd example/paginablesliverchildbuilderdelegate_example/ && flutter pub get
-      - run: cd example/paginablesliverchildbuilderdelegate_example/ && flutter analyze
-      - run: cd example/paginablesliverchildbuilderdelegate_example/ && flutter test
+      - name: Testing and analyzing paginable
+        run: flutter pub get && flutter analyze && flutter test --coverage
 
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage/lcov.info
+
