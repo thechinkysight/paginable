@@ -76,7 +76,7 @@ class PaginableListViewBuilder extends StatefulWidget {
 
 class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
   ValueNotifier<LastItem> valueNotifier =
-      ValueNotifier(LastItem.progressIndicator);
+      ValueNotifier(LastItem.emptyContainer);
 
   late Exception exception;
 
