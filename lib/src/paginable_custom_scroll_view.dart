@@ -61,7 +61,7 @@ class PaginableCustomScrollView extends StatefulWidget {
 
 class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
   ValueNotifier<LastItem> valueNotifier =
-      ValueNotifier(LastItem.progressIndicator);
+      ValueNotifier(LastItem.emptyContainer);
 
   bool isLoadMoreBeingCalled = false;
 
