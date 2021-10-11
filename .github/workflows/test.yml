@@ -21,11 +21,22 @@ jobs:
           channel: "stable"
           
       - name: Testing and analyzing paginablelistviewbuilder_example
-        run: cd example/paginablelistviewbuilder_example/ && flutter pub get && flutter analyze && flutter test
+        run: |
+          cd example/paginablelistviewbuilder_example
+          flutter pub get
+          flutter analyze
+          flutter test
 
       - name: Testing and analyzing paginablelistviewbuilder_example
-        run: cd example/paginablesliverchildbuilderdelegate_example/ && flutter pub get && flutter analyze && flutter test
+        run: |
+          cd example/paginablesliverchildbuilderdelegate_example
+          flutter pub get
+          flutter analyze
+          flutter test
 
       - name: Testing and analyzing paginable
-        run: flutter pub get && flutter analyze && flutter test
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
 
