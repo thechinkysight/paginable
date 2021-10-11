@@ -107,7 +107,7 @@ class _PaginableListViewBuilderState extends State<PaginableListViewBuilder> {
               performPagination();
             }
           }
-          return true;
+          return false;
         },
         child: ListView.builder(
             key: widget.key,
