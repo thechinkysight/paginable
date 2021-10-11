@@ -9,3 +9,7 @@
 # 1.1.1
 
 * A patch for this [issue](https://github.com/chinkysight/paginable/issues/9)
+
+# 1.1.2
+
+* A patch for this [issue](https://github.com/chinkysight/paginable/issues/12)
