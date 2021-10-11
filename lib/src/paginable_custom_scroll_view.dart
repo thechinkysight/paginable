@@ -113,7 +113,7 @@ class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
               performPagination();
             }
           }
-          return true;
+          return false;
         },
         child: CustomScrollView(
             key: widget.key,
