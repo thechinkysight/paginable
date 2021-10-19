@@ -17,20 +17,20 @@ jobs:
       - uses: subosito/flutter-action@v1.5.3
         with:
           channel: "stable"
-          
-      - name: Testing and analyzing paginablelistviewbuilder_example
-        run: |
-          cd example/paginablelistviewbuilder_example
-          flutter pub get
-          flutter analyze
-          flutter test 
 
-      - name: Testing and analyzing paginablelistviewbuilder_example
+      - name: Testing and analyzing paginablesliverchildbuilderdelegate_example
         run: |
           cd example/paginablesliverchildbuilderdelegate_example
           flutter pub get
           flutter analyze
           flutter test
+
+      # - name: Testing and analyzing paginablelistview_example
+      #   run: |
+      #     cd example/paginablelistview_example
+      #     flutter pub get
+      #     flutter analyze
+      #     flutter test
 
       - name: Testing and analyzing paginable
         run: |
@@ -42,4 +42,3 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           files: coverage/lcov.info
-
