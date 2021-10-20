@@ -1,10 +1,10 @@
 # Examples
 
-## Using `PaginableListViewBuilder`
+<!-- ## Using `PaginableListView`
 
-This example helps to understand the usage of `PaginableListViewBuilder`.
+This example helps to understand the usage of `PaginableListView`.
 
-[Jump To Source](https://github.com/chinkysight/paginable/tree/main/example/paginablelistviewbuilder_example)
+[Jump To Source](https://github.com/chinkysight/paginable/tree/main/example/paginablelistview_example) -->
 
 ## Using `PaginableCustomScrollView` with `PaginableSliverChildBuilderDelegate`
 
