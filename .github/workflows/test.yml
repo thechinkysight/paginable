@@ -1,8 +1,6 @@
 name: Test
 
 on:
-  push:
-    branches: [dev]
   pull_request:
     branches: [dev]
 
@@ -20,12 +18,12 @@ jobs:
         with:
           channel: "stable"
 
-      - name: Testing and analyzing paginablesliverchildbuilderdelegate_example
-        run: |
-          cd example/paginablesliverchildbuilderdelegate_example
-          flutter pub get
-          flutter analyze
-          flutter test
+      # - name: Testing and analyzing paginablesliverchildbuilderdelegate_example
+      #   run: |
+      #     cd example/paginablesliverchildbuilderdelegate_example
+      #     flutter pub get
+      #     flutter analyze
+      #     flutter test
 
       # - name: Testing and analyzing paginablelistview_example
       #   run: |

@@ -1,8 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'utils/custom_keys.dart';
-import 'utils/last_item.dart';
-import 'utils/scroll_position.dart';
+import 'utils/utils.dart';
 
 /// It is the paginable's version of [ListView](https://api.flutter.dev/flutter/widgets/ListView-class.html),
 /// which contains only two constructors: builder() & separated()

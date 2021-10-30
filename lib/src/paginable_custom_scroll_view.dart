@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'utils/last_item.dart';
+import 'utils/utils.dart';
+
+
 
 /// It is the paginable's version of [CustomScrollView](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html) and it is used along with [PaginableSliverChildBuilderDelegate](https://pub.dev/packages/paginable#using-paginablecustomscrollview-with-paginablesliverchildbuilderdelegate) to perform pagination.
 class PaginableCustomScrollView extends StatefulWidget {
