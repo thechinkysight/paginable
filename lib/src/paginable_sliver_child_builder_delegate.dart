@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:paginable/src/utils/last_item.dart';
+import 'utils/utils.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 /// It is the is paginable's version of [SliverChildBuilderDelegate](https://api.flutter.dev/flutter/widgets/SliverChildBuilderDelegate-class.html) and it is used along with [PaginableCustomScrollView](https://pub.dev/packages/paginable#using-paginablecustomscrollview-with-paginablesliverchildbuilderdelegate) to perform pagination.
 class PaginableSliverChildBuilderDelegate {
   static int _kDefaultSemanticIndexCallback(Widget _, int localIndex) =>
       localIndex;
 
-  final NullableIndexedWidgetBuilder builder;
+  final IndexedWidgetBuilder builder;
 
   /// It takes a function which contains two parameters, one being of type `Exception` and other being a
   /// `Function()`, returning a widget which will be displayed at the bottom of the scrollview when an
@@ -31,7 +32,7 @@ class PaginableSliverChildBuilderDelegate {
   final int? Function(Widget, int) semanticIndexCallback;
   final int semanticIndexOffset;
 
-  PaginableSliverChildBuilderDelegate(this.builder,
+  const PaginableSliverChildBuilderDelegate(this.builder,
       {required this.errorIndicatorWidget,
       required this.progressIndicatorWidget,
       this.findChildIndexCallback,
@@ -42,28 +43,27 @@ class PaginableSliverChildBuilderDelegate {
       this.semanticIndexCallback = _kDefaultSemanticIndexCallback,
       this.semanticIndexOffset = 0});
 
-  /// Creates a delegate that supplies children for slivers using the given
-  /// builder callback.
-  ///
-  /// If the order in which [builder] returns children ever changes, consider
-  /// providing a [findChildIndexCallback]. This allows the delegate to find the
-  /// new index for a child that was previously located at a different index to
-  /// attach the existing state to the [Widget] at its new location.
+  /// It simply returns a SliverChildBuilderDelegate which is a delegate that
+  /// supplies children for slivers using a builder callback.
   SliverChildBuilderDelegate build() =>
       SliverChildBuilderDelegate((BuildContext context, int index) {
         if (index == childCount) {
           return ValueListenableBuilder<LastItem>(
-              valueListenable: context.read<ValueNotifier<LastItem>>(),
-              builder: (context, value, child) {
-                if (value == LastItem.emptyContainer) {
-                  return Container();
-                } else if (value == LastItem.errorIndicator) {
-                  return errorIndicatorWidget(
-                      context.read<ValueNotifier<Exception>>().value,
-                      context.read<void Function()>());
-                }
-                return progressIndicatorWidget;
-              });
+            valueListenable: context.read<ValueNotifier<LastItem>>(),
+            builder: (context, value, child) {
+              if (value == LastItem.emptyContainer) {
+                return Container(
+                  key:
+                      keyForEmptyContainerWidgetOfPaginableSliverChildBuilderDelegate,
+                );
+              } else if (value == LastItem.errorIndicator) {
+                return errorIndicatorWidget(
+                    context.read<ValueNotifier<Exception>>().value,
+                    context.read<void Function()>());
+              }
+              return progressIndicatorWidget;
+            },
+          );
         }
         return builder(context, index);
       },
@@ -74,4 +74,54 @@ class PaginableSliverChildBuilderDelegate {
           addSemanticIndexes: addSemanticIndexes,
           semanticIndexCallback: semanticIndexCallback,
           semanticIndexOffset: semanticIndexOffset);
+
+
+  /// It simply returns a separable SliverChildBuilderDelegate which is a delegate that
+  /// supplies children for slivers separated by separators.
+  SliverChildBuilderDelegate separated(IndexedWidgetBuilder separatorBuilder) =>
+      SliverChildBuilderDelegate((BuildContext context, int index) {
+        if (index ==
+            _computeActualChildCount(childCount == null ? 0 : childCount!) -
+                1) {
+          return ValueListenableBuilder<LastItem>(
+            valueListenable: context.read<ValueNotifier<LastItem>>(),
+            builder: (context, value, child) {
+              if (value == LastItem.emptyContainer) {
+                return Container(
+                  key:
+                      keyForEmptyContainerWidgetOfPaginableSliverChildBuilderDelegate,
+                );
+              } else if (value == LastItem.errorIndicator) {
+                return errorIndicatorWidget(
+                    context.read<ValueNotifier<Exception>>().value,
+                    context.read<void Function()>());
+              }
+              return progressIndicatorWidget;
+            },
+          );
+        }
+
+        final int itemIndex = index ~/ 2;
+        final Widget widget;
+
+        if (index.isEven) {
+          widget = builder(context, itemIndex);
+        } else {
+          widget = separatorBuilder(context, itemIndex);
+        }
+        return widget;
+      },
+          findChildIndexCallback: findChildIndexCallback,
+          childCount:
+              _computeActualChildCount(childCount == null ? 0 : childCount!),
+          addAutomaticKeepAlives: addAutomaticKeepAlives,
+          addRepaintBoundaries: addRepaintBoundaries,
+          addSemanticIndexes: addSemanticIndexes,
+          semanticIndexCallback: (Widget _, int index) =>
+              index.isEven ? index ~/ 2 : null,
+          semanticIndexOffset: semanticIndexOffset);
+
+  static int _computeActualChildCount(int childCount) {
+    return math.max(0, childCount * 2);
+  }
 }

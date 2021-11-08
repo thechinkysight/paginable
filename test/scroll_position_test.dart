@@ -14,63 +14,71 @@ void main() {
   });
 
   testWidgets(
-      'isScrollingDownwards() should only return true when we are scrolling downwards',
-      (WidgetTester tester) async {
-    late bool isScrollingDownwardsTest;
+    'isScrollingDownwards() should only return true when we are scrolling downwards',
+    (WidgetTester tester) async {
+      late bool isScrollingDownwardsTest;
 
-    await tester.pumpWidget(TestApp(
-        scrollController: scrollController,
-        onNotification: (scrollUpdateNotification) {
-          isScrollingDownwardsTest =
-              isScrollingDownwards(scrollUpdateNotification);
+      await tester.pumpWidget(
+        TestApp(
+          scrollController: scrollController,
+          onNotification: (scrollUpdateNotification) {
+            isScrollingDownwardsTest =
+                isScrollingDownwards(scrollUpdateNotification);
 
-          return true;
-        }));
+            return true;
+          },
+        ),
+      );
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
+      scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(isScrollingDownwardsTest, true);
+      expect(isScrollingDownwardsTest, true);
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent * .1);
+      scrollController.jumpTo(scrollController.position.maxScrollExtent * .1);
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(isScrollingDownwardsTest, false);
-  });
+      expect(isScrollingDownwardsTest, false);
+    },
+  );
 
   testWidgets(
-      'isAlmostAtTheEndOfTheScroll() should only return true when we are at 80% or more of the max scroll',
-      (WidgetTester tester) async {
-    late bool isAlmostAtTheEndOfTheScrollTest;
+    'isAlmostAtTheEndOfTheScroll() should only return true when we are at 80% or more of the max scroll',
+    (WidgetTester tester) async {
+      late bool isAlmostAtTheEndOfTheScrollTest;
 
-    await tester.pumpWidget(TestApp(
-        scrollController: scrollController,
-        onNotification: (scrollUpdateNotification) {
-          isAlmostAtTheEndOfTheScrollTest =
-              isAlmostAtTheEndOfTheScroll(scrollUpdateNotification);
-          return true;
-        }));
+      await tester.pumpWidget(
+        TestApp(
+          scrollController: scrollController,
+          onNotification: (scrollUpdateNotification) {
+            isAlmostAtTheEndOfTheScrollTest =
+                isAlmostAtTheEndOfTheScroll(scrollUpdateNotification);
+            return true;
+          },
+        ),
+      );
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent * .9);
+      scrollController.jumpTo(scrollController.position.maxScrollExtent * .9);
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(isAlmostAtTheEndOfTheScrollTest, true);
+      expect(isAlmostAtTheEndOfTheScrollTest, true);
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent * .7);
+      scrollController.jumpTo(scrollController.position.maxScrollExtent * .7);
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(isAlmostAtTheEndOfTheScrollTest, false);
+      expect(isAlmostAtTheEndOfTheScrollTest, false);
 
-    scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
+      scrollController.jumpTo(scrollController.position.maxScrollExtent * .8);
 
-    await tester.pump();
+      await tester.pump();
 
-    expect(isAlmostAtTheEndOfTheScrollTest, true);
-  });
+      expect(isAlmostAtTheEndOfTheScrollTest, true);
+    },
+  );
 }
 
 class TestApp extends StatelessWidget {
@@ -87,15 +95,19 @@ class TestApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SafeArea(
-          child: Scaffold(
-        body: NotificationListener<ScrollUpdateNotification>(
+        child: Scaffold(
+          body: NotificationListener<ScrollUpdateNotification>(
             onNotification: onNotification,
             child: ListView.builder(
-                controller: scrollController,
-                itemCount: 20,
-                itemBuilder: (context, index) =>
-                    ListTile(title: Text(index.toString())))),
-      )),
+              controller: scrollController,
+              itemCount: 20,
+              itemBuilder: (context, index) => ListTile(
+                title: Text(index.toString()),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
