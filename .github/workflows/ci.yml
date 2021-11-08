@@ -18,12 +18,12 @@ jobs:
         with:
           channel: "stable"
 
-      - name: Testing and analyzing paginablesliverchildbuilderdelegate_example
-        run: |
-          cd example/paginablesliverchildbuilderdelegate_example
-          flutter pub get
-          flutter analyze
-          flutter test
+      # - name: Testing and analyzing paginablesliverchildbuilderdelegate_example
+      #   run: |
+      #     cd example/paginablesliverchildbuilderdelegate_example
+      #     flutter pub get
+      #     flutter analyze
+      #     flutter test
 
       # - name: Testing and analyzing paginablelistview_example
       #   run: |
@@ -39,6 +39,6 @@ jobs:
           flutter test --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v2.1.0
         with:
           files: coverage/lcov.info

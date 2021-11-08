@@ -8,7 +8,9 @@ void main() {
 
   Widget progressIndicatorWidget = Container(
     padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: const Center(child: CircularProgressIndicator()),
+    child: const Center(
+      child: CircularProgressIndicator(),
+    ),
   );
 
   Widget errorIndicatorWidget(Exception exception, void Function() tryAgain) =>
@@ -38,17 +40,16 @@ void main() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
+  setUp(() {
+    scrollController = ScrollController();
+  });
+
+  tearDown(() {
+    scrollController.dispose();
+  });
   group(
     'Tests for builder constructor',
     () {
-      setUp(() {
-        scrollController = ScrollController();
-      });
-
-      tearDown(() {
-        scrollController.dispose();
-      });
-
       testWidgets(
         'The errorIndicatorWidget should be returned as the last item if an exception occurs in the loadMore() function',
         (WidgetTester tester) async {
@@ -102,7 +103,7 @@ void main() {
           );
 
           testWidgets(
-            'The empty Container widget should be returned as last item if the loadMore() function executes after a delay without any exceptions',
+            'The empty Container widget should be returned as the last item if the loadMore() function executes after a delay without any exceptions',
             (WidgetTester tester) async {
               await tester.pumpWidget(
                 TestAppForBuilderConstructor(
@@ -128,7 +129,7 @@ void main() {
           );
 
           testWidgets(
-            'The empty Container widget should be returned as last item if loadMore() function executes immediately without any exceptions',
+            'The empty Container widget should be returned as the last item if loadMore() function executes immediately without any exceptions',
             (WidgetTester tester) async {
               await tester.pumpWidget(
                 TestAppForBuilderConstructor(
@@ -150,7 +151,7 @@ void main() {
       );
 
       testWidgets(
-        'The progressIndicatorWidget should be returned as last item if the loadMore() function is being executed',
+        'The progressIndicatorWidget should be returned as the last item if the loadMore() function is being executed',
         (WidgetTester tester) async {
           await tester.pumpWidget(
             TestAppForBuilderConstructor(
@@ -184,14 +185,6 @@ void main() {
   group(
     'Test for separate constructor',
     () {
-      setUp(() {
-        scrollController = ScrollController();
-      });
-
-      tearDown(() {
-        scrollController.dispose();
-      });
-
       testWidgets(
         'The errorIndicatorWidget should be returned as the last item if an exception occurs in the loadMore() function',
         (WidgetTester tester) async {
@@ -261,7 +254,7 @@ void main() {
           );
 
           testWidgets(
-            'The empty Container widget should be returned as last item if the loadMore() function executes after a delay without any exceptions',
+            'The empty Container widget should be returned as the last item if the loadMore() function executes after a delay without any exceptions',
             (WidgetTester tester) async {
               await tester.pumpWidget(
                 TestAppForSeparatedConstructor(
@@ -287,7 +280,7 @@ void main() {
           );
 
           testWidgets(
-            'The empty Container widget should be returned as last item if loadMore() function executes immediately without any exceptions',
+            'The empty Container widget should be returned as the last item if loadMore() function executes immediately without any exceptions',
             (WidgetTester tester) async {
               await tester.pumpWidget(
                 TestAppForSeparatedConstructor(
@@ -309,7 +302,7 @@ void main() {
       );
 
       testWidgets(
-        'The progressIndicatorWidget should be returned as last item if the loadMore() function is being executed',
+        'The progressIndicatorWidget should be returned as the last item if the loadMore() function is being executed',
         (WidgetTester tester) async {
           await tester.pumpWidget(
             TestAppForSeparatedConstructor(
@@ -345,20 +338,19 @@ void main() {
 }
 
 class TestAppForBuilderConstructor extends StatelessWidget {
-  final List<int> numbers = List.generate(30, (index) => index);
   final ScrollController? scrollController;
   final Widget progressIndicatorWidget;
   final Widget Function(Exception, void Function()) errorIndicatorWidget;
   final Future<void> Function() loadMore;
-  final int? itemCount;
+  final int itemCount;
 
-  TestAppForBuilderConstructor({
+  const TestAppForBuilderConstructor({
     Key? key,
     this.scrollController,
     required this.progressIndicatorWidget,
     required this.errorIndicatorWidget,
     required this.loadMore,
-    this.itemCount,
+    this.itemCount = 30,
   }) : super(key: key);
 
   @override
@@ -373,12 +365,10 @@ class TestAppForBuilderConstructor extends StatelessWidget {
             loadMore: loadMore,
             itemBuilder: (context, index) => ListTile(
               title: Text(
-                itemCount == null
-                    ? numbers[index].toString()
-                    : index.toString(),
+                index.toString(),
               ),
             ),
-            itemCount: itemCount ?? numbers.length,
+            itemCount: itemCount,
           ),
         ),
       ),
@@ -398,7 +388,7 @@ class TestAppForSeparatedConstructor extends StatelessWidget {
       required this.loadMore,
       required this.progressIndicatorWidget,
       required this.errorIndicatorWidget,
-      this.itemCount = 15,
+      this.itemCount = 30,
       this.scrollController})
       : super(key: key);
 
