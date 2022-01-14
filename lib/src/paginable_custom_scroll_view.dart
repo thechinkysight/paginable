@@ -108,8 +108,7 @@ class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
       child: NotificationListener<ScrollUpdateNotification>(
         onNotification: (ScrollUpdateNotification scrollUpdateNotification) {
           if (isAlmostAtTheEndOfTheScroll(scrollUpdateNotification) &&
-              isScrollingDownwards(scrollUpdateNotification) &&
-              scrollUpdateNotification.dragDetails?.delta != null) {
+              isScrollingDownwards(scrollUpdateNotification)) {
             if (!isLoadMoreBeingCalled) {
               performPagination();
             }
