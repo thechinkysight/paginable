@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'utils/utils.dart';
 
-
-
 /// It is the paginable's version of [CustomScrollView](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html) and it is used along with [PaginableSliverChildBuilderDelegate](https://pub.dev/packages/paginable#using-paginablecustomscrollview-with-paginablesliverchildbuilderdelegate) to perform pagination.
 class PaginableCustomScrollView extends StatefulWidget {
   /// It takes an async function which will be executed when the scroll is almost at the end.
@@ -110,7 +108,8 @@ class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
       child: NotificationListener<ScrollUpdateNotification>(
         onNotification: (ScrollUpdateNotification scrollUpdateNotification) {
           if (isAlmostAtTheEndOfTheScroll(scrollUpdateNotification) &&
-              isScrollingDownwards(scrollUpdateNotification)) {
+              isScrollingDownwards(scrollUpdateNotification) &&
+              scrollUpdateNotification.dragDetails?.delta != null) {
             if (!isLoadMoreBeingCalled) {
               performPagination();
             }
