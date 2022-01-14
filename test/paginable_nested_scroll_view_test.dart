@@ -60,7 +60,7 @@ class TestApp extends StatelessWidget {
           controller: scrollController,
           loadMore: loadMore,
           headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[];
+            return <Widget>[const SliverAppBar()];
           },
           body: ListView.builder(
             itemCount: 20,
