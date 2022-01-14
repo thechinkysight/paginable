@@ -188,7 +188,8 @@ class _PaginableListViewState extends State<PaginableListView> {
     return NotificationListener<ScrollUpdateNotification>(
       onNotification: (ScrollUpdateNotification scrollUpdateNotification) {
         if (isAlmostAtTheEndOfTheScroll(scrollUpdateNotification) &&
-            isScrollingDownwards(scrollUpdateNotification)) {
+            isScrollingDownwards(scrollUpdateNotification) &&
+            scrollUpdateNotification.dragDetails?.delta != null) {
           if (!isLoadMoreBeingCalled) {
             performPagination();
           }

@@ -4,62 +4,52 @@ import 'package:provider/provider.dart';
 
 import 'utils/utils.dart';
 
-/// It is the paginable's version of [CustomScrollView](https://api.flutter.dev/flutter/widgets/CustomScrollView-class.html) and it is used along with [PaginableSliverChildBuilderDelegate](https://pub.dev/packages/paginable#using-paginablecustomscrollview-with-paginablesliverchildbuilderdelegate) to perform pagination.
-class PaginableCustomScrollView extends StatefulWidget {
+/// It is the paginable's version of [NestedScrollView](https://api.flutter.dev/flutter/widgets/NestedScrollView-class.html) and it is used along with [PaginableSliverChildBuilderDelegate](https://pub.dev/packages/paginable#using-paginablecustomscrollview-with-paginablesliverchildbuilderdelegate) to perform pagination.
+class PaginableNestedScrollView extends StatefulWidget {
   /// It takes an async function which will be executed when the scroll is almost at the end.
   final Future<void> Function() loadMore;
 
   // ignore: annotate_overrides, overridden_fields
   final Key? key;
+  final List<Widget> Function(BuildContext, bool) headerSliverBuilder;
+  final Widget body;
+  final bool floatHeaderSlivers;
   final Axis scrollDirection;
   final bool reverse;
   final ScrollController? controller;
-  final bool? primary;
   final ScrollPhysics? physics;
   final ScrollBehavior? scrollBehavior;
-  final bool shrinkWrap;
-  final Key? center;
-  final double anchor;
-  final double? cacheExtent;
 
   /// The slivers to place inside the viewport.
-  final List<Widget> slivers;
-  final int? semanticChildCount;
   final DragStartBehavior dragStartBehavior;
-  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final String? restorationId;
   final Clip clipBehavior;
 
-  /// Creates a [ScrollView] that creates custom scroll effects using slivers.
+  /// Creates a [ScrollView] that creates custom scroll effects using body.
   ///
   /// See the [ScrollView] constructor for more details on these arguments.
-  const PaginableCustomScrollView(
-      {this.key,
-      this.scrollDirection = Axis.vertical,
-      this.reverse = false,
-      this.controller,
-      this.primary,
-      this.physics,
-      this.scrollBehavior,
-      this.shrinkWrap = false,
-      this.center,
-      this.anchor = 0.0,
-      this.cacheExtent,
-      this.slivers = const <Widget>[],
-      this.semanticChildCount,
-      this.dragStartBehavior = DragStartBehavior.start,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-      this.restorationId,
-      this.clipBehavior = Clip.hardEdge,
-      required this.loadMore})
-      : super(key: key);
+  const PaginableNestedScrollView({
+    this.key,
+    required this.loadMore,
+    required this.headerSliverBuilder,
+    required this.body,
+    this.floatHeaderSlivers = false,
+    this.scrollDirection = Axis.vertical,
+    this.reverse = false,
+    this.controller,
+    this.physics,
+    this.scrollBehavior,
+    this.dragStartBehavior = DragStartBehavior.start,
+    this.restorationId,
+    this.clipBehavior = Clip.hardEdge,
+  }) : super(key: key);
 
   @override
-  _PaginableCustomScrollViewState createState() =>
-      _PaginableCustomScrollViewState();
+  _PaginableNestedScrollViewState createState() =>
+      _PaginableNestedScrollViewState();
 }
 
-class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
+class _PaginableNestedScrollViewState extends State<PaginableNestedScrollView> {
   ValueNotifier<LastItem> valueNotifier =
       ValueNotifier(LastItem.emptyContainer);
 
@@ -116,22 +106,17 @@ class _PaginableCustomScrollViewState extends State<PaginableCustomScrollView> {
           }
           return false;
         },
-        child: CustomScrollView(
+        child: NestedScrollView(
             key: widget.key,
+            headerSliverBuilder: widget.headerSliverBuilder,
+            body: widget.body,
+            floatHeaderSlivers: widget.floatHeaderSlivers,
             scrollDirection: widget.scrollDirection,
             reverse: widget.reverse,
             controller: widget.controller,
-            primary: widget.primary,
             physics: widget.physics,
             scrollBehavior: widget.scrollBehavior,
-            shrinkWrap: widget.shrinkWrap,
-            center: widget.center,
-            anchor: widget.anchor,
-            cacheExtent: widget.cacheExtent,
-            slivers: widget.slivers,
-            semanticChildCount: widget.semanticChildCount,
             dragStartBehavior: widget.dragStartBehavior,
-            keyboardDismissBehavior: widget.keyboardDismissBehavior,
             restorationId: widget.restorationId,
             clipBehavior: widget.clipBehavior),
       ),
